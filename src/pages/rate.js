@@ -1,10 +1,12 @@
 import React from "react"
+import { Finance } from "financejs"
 import { useState, useRef, createRef } from "react"
-import { Row, Col, Container, Form } from "react-bootstrap"
+import { Row, Col, Container, Form, Button } from "react-bootstrap"
 
 import Layout from "../components/layout"
 import InlineForm from "../components/inlineForm"
 
+const finance = new Finance();
 
 const CFInput = ({ yearNo, yearRef }) => {
     var controlId = "year" + yearNo
@@ -25,12 +27,30 @@ const CFInputGroup = ({ numYears }) => {
     const refs = {}
     const rows = [];
     numYears = parseInt(numYears);
-    for (var i = 1; i < numYears + 1; i++) {
+
+    const [showResult, setShowResult] = useState(false);
+    const [rate, setRate] = useState("computing");
+
+    for (var i = 0; i < numYears + 1; i++) {
         const ref = createRef();
         refs[i] = ref;
         rows.push(
             <CFInput yearNo={i} yearRef={ref} />
         );
+    }
+
+    const onClick = (e) => {
+        e.preventDefault()
+
+        const cashFlow = [];
+        for (var i = 0; i < numYears + 1; i++) {
+            cashFlow[i] = parseFloat(refs[i].current.value)
+        }
+
+        var initial = cashFlow[0]
+        var cf = cashFlow.slice(1)
+        setRate(finance.IRR(initial, ...cf))
+        setShowResult(true)
     }
     return (
         <Container>
@@ -42,6 +62,17 @@ const CFInputGroup = ({ numYears }) => {
                         </Row>
                     )
                 })
+            }
+            <Row>
+                <Button variant="primary" type="submit" onClick={onClick}>
+                    Submit
+                </Button>
+            </Row>
+            {
+                showResult && 
+                <Row>
+                    <p>{"Rate is: " + rate}</p>
+                </Row>
             }
         </Container>
     )
