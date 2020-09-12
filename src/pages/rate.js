@@ -8,13 +8,26 @@ import InlineForm from "../components/inlineForm"
 
 const finance = new Finance();
 
+
+const CFInputFormLabel = ({yearNo}) => {
+    if(yearNo === 0) {
+        return (
+            <Form.Label>{"Present Value (Year 0):"}</Form.Label>    
+        )
+    }
+    return (
+        <Form.Label>{"Cash Flow for Year: " + yearNo}</Form.Label>
+    )
+}
+
+
 const CFInput = ({ yearNo, yearRef }) => {
     var controlId = "year" + yearNo
     return (
         <Col>
             <Form inline>
                 <Form.Group controlId={controlId}>
-                    <Form.Label>{"Cash Flow for Year: " + yearNo}</Form.Label>
+                    <CFInputFormLabel yearNo={yearNo} />
                     <Form.Control ref={yearRef} type="number" className="mx-sm-3" />
                 </Form.Group>
             </Form>
@@ -79,12 +92,12 @@ const CFInputGroup = ({ numYears }) => {
 }
 
 
-const RateForm = ({ show, yearsRef }) => {
+const RateForm = ({ show, years }) => {
     if (show) {
         return (
             <Col>
                 <p>Hello!</p>
-                <CFInputGroup numYears={yearsRef.current.value} />
+                <CFInputGroup numYears={years} />
             </Col>
         )
     } else {
@@ -100,6 +113,7 @@ const RateForm = ({ show, yearsRef }) => {
 
 function Rate() {
     const [show, setShow] = useState(false);
+    const [years, setYears] = useState(0);
     const inputYears = useRef(null);
 
     return (
@@ -114,6 +128,7 @@ function Rate() {
                             onClick={
                                 (e) => {
                                     e.preventDefault()
+                                    setYears(inputYears.current.value)
                                     setShow(true)
                                 }
                             }
@@ -121,7 +136,7 @@ function Rate() {
                     </Col>
                 </Row>
                 <Row>
-                    <RateForm show={show} yearsRef={inputYears} />
+                    <RateForm show={show} years={years} />
                 </Row>
             </Container>
         </Layout>
