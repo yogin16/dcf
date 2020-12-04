@@ -7,7 +7,7 @@ const CustomNavbar = ({pageInfo}) => {
   return (
     <Navbar bg="light" expand="lg">
       <Link to="/" className="link-no-style">
-        <Navbar.Brand as="span">DFC</Navbar.Brand>
+        <Navbar.Brand as="span">DCF</Navbar.Brand>
       </Link>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
